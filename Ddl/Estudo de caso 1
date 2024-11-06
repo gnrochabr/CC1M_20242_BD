@@ -64,3 +64,12 @@ CREATE TABLE IF NOT EXISTS ItensTransferencia (
   FOREIGN KEY (númerodistribuição) REFERENCES Transferencias(númerodistribuição),
   FOREIGN KEY (codigoProduto) REFERENCES Produtos(codigoProduto)
 );
+ALTER TABLE Produtos
+ADD categoria VARCHAR(50);
+ALTER TABLE Produtos;
+DROP COLUMN categoria;
+ALTER TABLE Produtos;
+MODIFY preco DECIMAL(12,2);
+RENAME TABLE Produtos TO Items;
+CREATE TABLE IF NOT EXISTS CLIENTE2;
+DROP TABLE CLIENTE2);
