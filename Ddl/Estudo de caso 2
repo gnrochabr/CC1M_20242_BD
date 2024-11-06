@@ -71,4 +71,4 @@ ALTER TABLE OperacaoVoo RENAME TO Voo_Operacao;
 
 CREATE INDEX idx_codigo_voo ON Voo (codigo_voo);
 
-DROP TABLE Voo_Operacao;
+DROP TABLE Voo_Operacao);
