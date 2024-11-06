@@ -1,0 +1,64 @@
+CREATE SCHEMA academia_saude_em_movimento;
+USE academia_saude_em_movimento;
+
+CREATE TABLE IF NOT EXISTS aluno (
+    id_aluno INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(100) NOT NULL,
+    cpf VARCHAR(14) UNIQUE NOT NULL,
+    data_nascimento DATE,
+    endereco TEXT
+);
+
+CREATE TABLE IF NOT EXISTS instrutor (
+    id_instrutor INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(100) NOT NULL,
+    especialidade VARCHAR(50)
+);
+
+CREATE TABLE IF NOT EXISTS modalidade (
+    id_modalidade INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(50) NOT NULL,
+    descricao TEXT
+);
+
+CREATE TABLE IF NOT EXISTS plano_treinamento (
+    id_plano INT PRIMARY KEY AUTO_INCREMENT,
+    id_aluno INT,
+    id_instrutor INT,
+    data_inicio DATE,
+    data_termino DATE,
+    FOREIGN KEY (id_aluno) REFERENCES aluno(id_aluno),
+    FOREIGN KEY (id_instrutor) REFERENCES instrutor(id_instrutor)
+);
+
+CREATE TABLE aula (
+    id_aula INT PRIMARY KEY AUTO_INCREMENT,
+    horario TIME,
+    capacidade INT,
+    id_modalidade INT,
+    id_instrutor INT,
+    FOREIGN KEY (id_modalidade) REFERENCES modalidade(id_modalidade),
+    FOREIGN KEY (id_instrutor) REFERENCES instrutor(id_instrutor)
+);
+
+CREATE TABLE IF NOT EXISTS pagamento (
+    id_pagamento INT PRIMARY KEY AUTO_INCREMENT,
+    id_aluno INT,
+    data_pagamento DATE,
+    valor DECIMAL(10,2),
+    status ENUM('pago', 'pendente'),
+    FOREIGN KEY (id_aluno) REFERENCES aluno(id_aluno)
+);
+
+CREATE TABLE IF NOT EXISTS aluno_modalidade (
+    id_aluno INT,
+    id_modalidade INT,
+    PRIMARY KEY (id_aluno, id_modalidade),
+    FOREIGN KEY (id_aluno) REFERENCES aluno(id_aluno),
+    FOREIGN KEY (id_modalidade) REFERENCES modalidade(id_modalidade)
+);ALTER TABLE clientes ADD data_nascimento DATE;
+ALTER TABLE clientes DROP COLUMN telefone;
+ALTER TABLE clientes MODIFY nome VARCHAR(255);
+SELECT * FROM clientes WHERE nome LIKE 'João%';
+CREATE TABLE IF NOT EXISTS ESPORTE;
+DROP TABLE ESPORTE);
