@@ -1,0 +1,67 @@
+CREATE DATABASE inova_tech;
+USE inova_tech;
+
+CREATE TABLE IF NOT EXISTS Clientes (
+    clienteID INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(100),
+    CPF VARCHAR(11),
+    dataNascimento DATE,
+    endereco VARCHAR(200),
+    programaFidelidade BOOLEAN
+);
+
+CREATE TABLE IF NOT EXISTS Produtos (
+    produtoID INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(100),
+    categoria VARCHAR(50),
+    preco DECIMAL(10,2),
+    quantidadeEstoque INT,
+    fornecedorID INT,
+    FOREIGN KEY (fornecedorID) REFERENCES Fornecedores(fornecedorID)
+);
+
+CREATE TABLE IF NOT EXISTS Fornecedores (
+    fornecedorID INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(100),
+    contato VARCHAR(100)
+);
+
+CREATE TABLE IF NOT EXISTS Vendas (
+    vendaID INT PRIMARY KEY AUTO_INCREMENT,
+    clienteID INT,
+    dataVenda DATE,
+    FOREIGN KEY (clienteID) REFERENCES Clientes(clienteID)
+);
+
+CREATE TABLE IF NOT EXISTS ItensVenda (
+    itemVendaID INT PRIMARY KEY AUTO_INCREMENT,
+    vendaID INT,
+    produtoID INT,
+    quantidade INT,
+    FOREIGN KEY (vendaID) REFERENCES Vendas(vendaID),
+    FOREIGN KEY (produtoID) REFERENCES Produtos(produtoID)
+);
+
+CREATE TABLE IF NOT EXISTS Pagamentos (
+    pagamentoID INT PRIMARY KEY AUTO_INCREMENT,
+    vendaID INT,
+    dataPagamento DATE,
+    valor DECIMAL(10,2),
+    status ENUM('pago', 'pendente'),
+    FOREIGN KEY (vendaID) REFERENCES Vendas(vendaID)
+);
+ALTER TABLE Clientes
+ADD COLUMN email VARCHAR(100);
+
+DROP TABLE Pagamentos;
+
+ALTER TABLE Clientes
+MODIFY COLUMN CPF CHAR(11);
+
+CREATE TABLE IF NOT EXISTS Promocoes (
+    promocaoID INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(100),
+    desconto DECIMAL(5,2),
+    dataInicio DATE,
+    dataFim DATE
+);

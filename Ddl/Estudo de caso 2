@@ -1,0 +1,74 @@
+CREATE SCHEMA VOO
+USE VOO
+ CREATE TABLE IF NOT EXISTS Passageiro (
+  id_passageiro INT PRIMARY KEY AUTO_INCREMENT,
+  nome VARCHAR(100),
+  cpf CHAR(11) UNIQUE,
+  telefone VARCHAR(20),
+  endereco VARCHAR(200)
+);
+
+CREATE TABLE IF NOT EXISTS Voo (
+  id_voo INT PRIMARY KEY AUTO_INCREMENT,
+  codigo_voo CHAR(10) UNIQUE,
+  origem VARCHAR(50),
+  destino VARCHAR(50),
+  horario_partida DATETIME,
+  horario_chegada DATETIME
+);
+
+CREATE TABLE IF NOT EXISTS Aeroporto (
+  id_aeroporto INT PRIMARY KEY AUTO_INCREMENT,
+  codigo_aeroporto CHAR(3) UNIQUE,
+  nome VARCHAR(100)
+);
+
+CREATE TABLE IF NOT EXISTS Aeronave (
+  id_aeronave INT PRIMARY KEY AUTO_INCREMENT,
+  matricula CHAR(10) UNIQUE,
+  modelo VARCHAR(50)
+);
+
+CREATE TABLE IF NOT EXISTS Funcionario (
+  id_funcionario INT PRIMARY KEY AUTO_INCREMENT,
+  nome VARCHAR(100),
+  funcao VARCHAR(50)
+);
+
+CREATE TABLE IF NOT EXISTS Reserva (
+  id_reserva INT PRIMARY KEY AUTO_INCREMENT,
+  id_passageiro INT,
+  id_voo INT,
+  FOREIGN KEY (id_passageiro) REFERENCES Passageiro(id_passageiro),
+  FOREIGN KEY (id_voo) REFERENCES Voo(id_voo)
+);
+
+CREATE TABLE IF NOT EXISTS OperacaoVoo (
+  id_operacao INT PRIMARY KEY AUTO_INCREMENT,
+  id_voo INT,
+  FOREIGN KEY (id_voo) REFERENCES Voo(id_voo)
+);
+
+CREATE TABLE IF NOT EXISTS Funcionario_Operacao (
+  id_funcionario INT,
+  id_operacao INT,
+  PRIMARY KEY (id_funcionario, id_operacao),
+  FOREIGN KEY (id_funcionario) REFERENCES Funcionario(id_funcionario),
+  FOREIGN KEY (id_operacao) REFERENCES OperacaoVoo(id_operacao)
+);
+
+
+ALTER TABLE IF NOT EXISTS Reserva
+ADD COLUMN classe ENUM('Economica', 'Executiva', 'Primeira');
+
+ALTER TABLE  Passageiro
+MODIFY telefone VARCHAR(25);
+
+ALTER TABLE IF NOT EXISTS Passageiro
+DROP COLUMN endereco;
+
+ALTER TABLE OperacaoVoo RENAME TO Voo_Operacao;
+
+CREATE INDEX idx_codigo_voo ON Voo (codigo_voo);
+
+DROP TABLE Voo_Operacao);

@@ -1,0 +1,75 @@
+CREATE SCHEMA  CADEIA DE SUPRIMENTOS;
+USE CADEIA DE SUPRIMENTOS ;
+
+CREATE TABLE IF NOT EXISTS Fornecedores (
+  codigoFornecedor INT PRIMARY KEY,
+  nome VARCHAR(100),
+  contato VARCHAR(100)
+);
+
+CREATE TABLE IF NOT EXISTS Produtos (
+  codigoProduto INT PRIMARY KEY,
+  descricao VARCHAR(100),
+  preco DECIMAL(10,2)
+);
+
+CREATE TABLE IF NOT EXISTS Pedidos (
+  numeroPedido INT PRIMARY KEY,
+  status ENUM('em processamento', 'enviado', 'recebido', 'cancelado'),
+  dataPedido DATE,
+  codigoFornecedor INT,
+  FOREIGN KEY (codigoFornecedor) REFERENCES Fornecedores(codigoFornecedor)
+);
+
+CREATE TABLE IF NOT EXISTS ItensPedido (
+  numeroPedido INT,
+  codigoProduto INT,
+  quantidade INT,
+  PRIMARY KEY (numeroPedido, codigoProduto),
+  FOREIGN KEY (numeroPedido) REFERENCES Pedidos(numeroPedido),
+  FOREIGN KEY (codigoProduto) REFERENCES Produtos(codigoProduto)
+);
+
+CREATE TABLE IF NOT EXISTS Recebimentos (
+  numeroRecebimento INT PRIMARY KEY,
+  dataRecebimento DATE,
+  condicao ENUM('aceito', 'rejeitado'),
+  motivoRejeicao TEXT,
+  numeroPedido INT,
+  FOREIGN KEY (numeroPedido) REFERENCES Pedidos(numeroPedido)
+);
+
+CREATE TABLE IF NOT EXISTS Filiais (
+  codigoFilial INT PRIMARY KEY,
+  nome VARCHAR(100),
+  endereco VARCHAR(200),
+  capacidadeArmazenamento INT
+);
+
+CREATE TABLE IF NOT EXISTS Transferencias (
+  numeroTransferencia INT PRIMARY KEY,
+  datadistribuiçãoDATE,
+  quantidadedistribuição INT,
+  codigoFilialOrigem INT,
+  codigoFilialDestino INT,
+  FOREIGN KEY (codigoFilialOrigem) REFERENCES Filiais(codigoFilial),
+  FOREIGN KEY (codigoFilialDestino) REFERENCES Filiais(codigoFilial)
+);
+
+CREATE TABLE IF NOT EXISTS ItensTransferencia (
+  númerodistribuição INT,
+  codigoProduto INT,
+  quantidade INT,
+  PRIMARY KEY (númerodistribuição, codigoProduto),
+  FOREIGN KEY (númerodistribuição) REFERENCES Transferencias(númerodistribuição),
+  FOREIGN KEY (codigoProduto) REFERENCES Produtos(codigoProduto)
+);
+ALTER TABLE Produtos
+ADD categoria VARCHAR(50);
+ALTER TABLE Produtos;
+DROP COLUMN categoria;
+ALTER TABLE Produtos;
+MODIFY preco DECIMAL(12,2);
+RENAME TABLE Produtos TO Items;
+CREATE TABLE IF NOT EXISTS CLIENTE2;
+DROP TABLE CLIENTE2);

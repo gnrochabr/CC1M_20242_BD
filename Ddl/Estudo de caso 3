@@ -1,0 +1,207 @@
+CREATE DATABASE TechSolution;
+USE TechSolution;
+
+CREATE TABLE IF NOT EXISTS TipoEndereco (
+  codigo INT PRIMARY KEY AUTO_INCREMENT,
+  nome VARCHAR(50)
+);
+
+CREATE TABLE IF NOT EXISTS Endereços (
+  idEndereco INT PRIMARY KEY AUTO_INCREMENT,
+  numero INT,
+  logradouro VARCHAR(100),
+  complemento VARCHAR(50),
+  CEP VARCHAR(20),
+  bairro VARCHAR(50),
+  cidade VARCHAR(50),
+  estado VARCHAR(2),
+  codigoTipo INT,
+  FOREIGN KEY (codigoTipo) REFERENCES TipoEndereco(codigo)
+);
+
+CREATE TABLE IF NOT EXISTS Clientes (
+  codigo INT PRIMARY KEY AUTO_INCREMENT,
+  cnpj VARCHAR(18),
+  razaoSocial VARCHAR(100),
+  ramoAtividade VARCHAR(50),
+  dataCadastro DATE,
+  pessoaContato VARCHAR(100),
+  enderecoPrincipal INT, -- Referência para a tabela Endereços
+  FOREIGN KEY (enderecoPrincipal) REFERENCES Enderecos(idEndereco)
+);
+
+CREATE TABLE IF NOT EXISTS Telefones (
+  idTelefone INT PRIMARY KEY AUTO_INCREMENT,
+  numero VARCHAR(20),
+  tipo VARCHAR(20), -- residencial, comercial, celular
+  codigoCliente INT,
+  FOREIGN KEY (codigoCliente) REFERENCES Clientes(codigo)
+);
+
+CREATE TABLE IF NOT EXISTS Encomendas (
+  numero INT PRIMARY KEY AUTO_INCREMENT,
+  dataInclusao DATE,
+  valorTotal DECIMAL(10,2),
+  valorDesconto DECIMAL(10,2),
+  valorLiquido DECIMAL(10,2),
+  idFormaPagamento INT, -- FK para tabela de formas de pagamento
+  quantidadeParcelas INT,
+  codigoCliente INT,
+  FOREIGN KEY (codigoCliente) REFERENCES Clientes(codigo)
+);
+
+CREATE TABLE IF NOT EXISTS ItensEncomenda (
+  idItemEncomenda INT PRIMARY KEY AUTO_INCREMENT,
+  numeroEncomenda INT,
+  codigoProduto INT,
+  quantidade INT,
+  FOREIGN KEY (numeroEncomenda) REFERENCES Encomendas(numero),
+  FOREIGN KEY (codigoProduto) REFERENCES Produtos(codigo)
+);
+CREATE TABLE IF NOT EXISTS Empregados (
+  matricula INT PRIMARY KEY AUTO_INCREMENT,
+  nome VARCHAR(100),
+  cargo VARCHAR(50),
+  salario DECIMAL(10,2),
+  dataAdmissao DATE,
+  qualificacoes TEXT,
+  enderecoPrincipal INT,
+  FOREIGN KEY (enderecoPrincipal) REFERENCES Enderecos(idEndereco)
+);
+
+CREATE TABLE IF NOT EXISTS TelefonesEmpregados (
+  idTelefone INT PRIMARY KEY AUTO_INCREMENT,
+  numero VARCHAR(20),
+  tipo VARCHAR(20),
+  matriculaEmpregado INT,
+  FOREIGN KEY (matriculaEmpregado) REFERENCES Empregados(matricula)
+);
+
+CREATE TABLE IF NOT EXISTS Empresas (
+  cnpj VARCHAR(18) PRIMARY KEY,
+  razaoSocial VARCHAR(100),
+  pessoaContato VARCHAR(100),
+  enderecoPrincipal INT,
+  FOREIGN KEY (enderecoPrincipal) REFERENCES Enderecos(idEndereco)
+);
+
+CREATE TABLE IF NOT EXISTS Fornecedores (
+  cnpj VARCHAR(18) PRIMARY KEY,
+  razaoSocial VARCHAR(100),
+  pessoaContato VARCHAR(100),
+  enderecoPrincipal INT,
+  FOREIGN KEY (enderecoPrincipal) REFERENCES Enderecos(idEndereco)
+);
+
+--
+CREATE TABLE IF NOT EXISTS TiposComponentes (
+  codigo INT PRIMARY KEY AUTO_INCREMENT,
+  nome VARCHAR(50)
+);
+
+CREATE TABLE IF NOT EXISTS Componentes (
+  codigo INT PRIMARY KEY AUTO_INCREMENT,
+  nome VARCHAR(100),
+  quantidadeEstoque INT,
+  precoUnitario DECIMAL(10,2),
+  unidade VARCHAR(20),
+  tipoComponente INT,
+  FOREIGN KEY (tipoComponente) REFERENCES TiposComponentes(codigo)
+);
+
+CREATE TABLE IF NOT EXISTS Produtos (
+  codigo INT PRIMARY KEY AUTO_INCREMENT,
+  nome VARCHAR(100),
+  cor VARCHAR(20),
+  dimensoes VARCHAR(50),
+  peso DECIMAL(10,2),
+  preco DECIMAL(10,2),
+  tempoFabricacao INT,
+  desenhoProduto TEXT,
+  horasMaoDeObra INT
+);
+
+CREATE TABLE IF NOT EXISTS ItensProduto (
+  idItemProduto INT PRIMARY KEY AUTO_INCREMENT,
+  codigoProduto INT,
+  codigoComponente INT,
+  quantidade INT,
+  FOREIGN KEY (codigoProduto) REFERENCES Produtos(codigo),
+  FOREIGN KEY (codigoComponente) REFERENCES Componentes(codigo)
+);
+CREATE TABLE IF NOT EXISTS Produtos (
+  codigo INT PRIMARY KEY AUTO_INCREMENT,
+  nome VARCHAR(100),
+  cor VARCHAR(20),
+  dimensoes VARCHAR(50),
+  peso DECIMAL(10,2),
+  preco DECIMAL(10,2),
+  tempoFabricacao INT,
+  desenhoProduto TEXT,
+  horasMaoDeObra INT
+);
+
+CREATE TABLE IF NOT EXISTS TiposComponentes (
+  codigo INT PRIMARY KEY AUTO_INCREMENT,
+  nome VARCHAR(50)
+);
+
+CREATE TABLE IF NOT EXISTS Componentes (
+  codigo_componentes INT PRIMARY KEY ,
+  nome VARCHAR(100),
+  quantidadeEstoque INT,
+  precoUnitario DECIMAL(10,2),
+  unidade VARCHAR(20),
+  tipoComponente INT,
+  FOREIGN KEY (tipoComponente) REFERENCES TiposComponentes(codigo)
+);
+CREATE TABLE IF NOT EXISTS ItensProduto (
+  idItemProduto INT PRIMARY KEY AUTO_INCREMENT,
+  codigoProduto INT,
+  codigoComponente INT,
+  quantidade INT,
+  FOREIGN KEY (codigoProduto) REFERENCES Produtos(codigo),
+  FOREIGN KEY (codigoComponente) REFERENCES Componentes(codigo)
+);
+
+CREATE TABLE IF NOT EXISTS Maquinas (
+  codigo INT PRIMARY KEY AUTO_INCREMENT,
+  nome VARCHAR(100),
+  tempoVida INT,
+  dataCompra DATE,
+  dataFimGarantia DATE
+);
+
+-- Tabela de RecursosEspecíficos (RE)
+CREATE TABLE IF NOT EXISTS RecursosEspecificos (
+  codigo INT PRIMARY KEY AUTO_INCREMENT,
+  nome VARCHAR(100),
+  quantidadeNecessaria INT,
+  unidade VARCHAR(20),
+  tempoUso INT,
+  horasMaoDeObra INT
+);
+
+CREATE TABLE IF NOT EXISTS RegistroManutencao (
+  idManutencao INT PRIMARY KEY AUTO_INCREMENT,
+  dataManutencao DATE,
+  descricao TEXT,
+  codigoMaquina INT,
+  FOREIGN KEY (codigoMaquina) REFERENCES Maquinas(codigo)
+);
+
+CREATE TABLE IF NOT EXISTS RegistroSuprimentos (
+  idSuprimento INT PRIMARY KEY AUTO_INCREMENT,
+  quantidade INT,
+  dataNecessidade DATE,
+  codigoComponente INT,
+  FOREIGN KEY (codigoComponente) REFERENCES Componentes(codigo)
+);
+DROP TABLE TelefonesEmpregados;
+ALTER TABLE Enderecos
+MODIFY COLUMN CEP VARCHAR(9);
+ALTER TABLE Produtos
+RENAME COLUMN desenhoProduto TO desenho_produto;
+DROP TABLE TelefonesEmpregados;
+ALTER TABLE Encomendas
+DROP COLUMN quantidadeParcelas;
